@@ -118,6 +118,7 @@
   --color-purple-950: #000853;
   --color-red-200: #ffc9c9;
   --color-red-500: #ed4545;
+  --color-slate-400: #898da9;
 }
 
 @layer base {
@@ -126,5 +127,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button {
+    cursor: pointer;
   }
 }

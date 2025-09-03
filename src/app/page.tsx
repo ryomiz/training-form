@@ -1,14 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
 
 export default function Home() {
+  const [file, setFile] = useState<File | null>(null);
   const [age, setAge] = useState([20]);
   return (
     <div>
+      <ImageUploader
+        file={file}
+        onChange={(file) => setFile(file)}
+        onDelete={() => setFile(null)}
+      />
       <Slider
         value={age}
         min={8}
