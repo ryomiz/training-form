@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -29,8 +24,7 @@ export default function RootLayout({
         className={cn(
           "min-h-dvh bg-purple-50 px-6 pt-24 antialiased",
           "sm:pt-30",
-          geistSans.variable,
-          geistMono.variable,
+          inter.className,
         )}
       >
         <main className={"mx-auto max-w-[426px]"}>{children}</main>
