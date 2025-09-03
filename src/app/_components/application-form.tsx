@@ -59,7 +59,7 @@ export const ApplicationForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="font-medium text-2xl">Personal info</h1>
-      <div className="mt-8 grid gap-y-6">
+      <div className="mt-8 grid gap-y-6 sm:gap-y-0">
         <FormControl
           label="First Name"
           errorMessage={getErrorMessage("firstName")}
@@ -117,18 +117,25 @@ export const ApplicationForm = () => {
 
       <div>
         <h2 className="mt-12 font-medium text-2xl">Your workout</h2>
-        <div className="grid grid-rows-[auto_auto] items-start sm:grid-cols-[auto_76px] sm:grid-rows-1">
-          <Calendar mode="single" />
-          <TimeSlotRadioGroup
-            selectedTimeSlot={timeSlot}
-            onChange={setTimeSlot}
-          />
+        <div className="mt-8 grid gap-y-6 sm:grid-cols-[auto_76px] sm:items-start sm:gap-x-6">
+          <FormControl label={"Date"}>
+            <Calendar mode="single" />
+          </FormControl>
+          <FormControl label={"Time"}>
+            <TimeSlotRadioGroup
+              selectedTimeSlot={timeSlot}
+              onChange={setTimeSlot}
+            />
+          </FormControl>
         </div>
-
-        <Button type="submit" disabled={isSubmitButtonDisabled}>
-          Send Application
-        </Button>
       </div>
+      <Button
+        type="submit"
+        className={"mt-8 w-full"}
+        disabled={isSubmitButtonDisabled}
+      >
+        Send Application
+      </Button>
     </form>
   );
 };
@@ -148,7 +155,7 @@ const TimeSlotRadioGroup = ({
   onChange: (value: string) => void;
 }) => (
   <RadioGroup
-    className="mt-6 grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
+    className="grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
     onValueChange={(value) => onChange(value)}
   >
     {timeSlotOptions.map((option) => (

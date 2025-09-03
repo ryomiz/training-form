@@ -22,8 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-dvh bg-purple-50 px-6 pt-24 antialiased",
-          "sm:pt-30",
+          "min-h-dvh bg-purple-50 px-6 py-24 antialiased",
+          "sm:py-30",
           inter.className,
         )}
       >

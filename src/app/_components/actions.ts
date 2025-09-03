@@ -1,5 +1,10 @@
 "use server";
 
-export const submitApplicationAction = async (_formData: FormData) => {
+import type { ApplicationFormInput } from "./schema";
+
+export const submitApplicationAction = async (
+  formInput: ApplicationFormInput,
+) => {
+  console.log(formInput);
   return;
 };
