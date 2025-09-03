@@ -62,7 +62,6 @@ function Slider({
             key={index}
             className="block size-4 rounded-full bg-purple-700 transition-[color,box-shadow] hover:ring-0 focus-visible:outline-hidden focus-visible:ring-0"
           >
-            {/* TODO value is not displayed correctly */}
             <SpeechBalloon
               className={"-translate-x-1/2 absolute top-5 left-1/2"}
               value={value}
@@ -78,14 +77,14 @@ const SpeechBalloon = ({
   value,
   ...props
 }: React.ComponentProps<"div"> & { value: number[] | undefined }) => {
-  return (
+  return typeof value === "undefined" ? null : (
     <div {...props}>
       <p
         className={
           "-translate-x-1/2 absolute bottom-1 left-1/2 font-medium text-purple-700 text-xs"
         }
       >
-        {10}
+        {value[0]}
       </p>
       <svg
         width="37"

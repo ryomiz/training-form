@@ -1,11 +1,21 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { useState } from "react";
 
 export default function Home() {
+  const [age, setAge] = useState([20]);
   return (
     <div>
-      <Slider defaultValue={[20]} min={8} max={100} step={1} />
+      <Slider
+        value={age}
+        min={8}
+        max={100}
+        step={1}
+        onValueChange={(val) => setAge(val)}
+      />
       <h1 className={"mt-8 font-medium text-2xl"}>Personal info</h1>
       <form className={"mt-8 grid gap-y-6"}>
         <div>
