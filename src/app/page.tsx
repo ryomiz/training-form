@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -11,6 +12,7 @@ export default function Home() {
   const [age, setAge] = useState([20]);
   return (
     <div>
+      <Calendar mode="single" />
       <ImageUploader
         file={file}
         onChange={(file) => setFile(file)}
