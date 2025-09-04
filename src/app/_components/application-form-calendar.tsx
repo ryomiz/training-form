@@ -12,7 +12,9 @@ export const ApplicationFormCalendar = ({ holidays, ...props }: Props) => {
     {
       dayOfWeek: [0, 7],
     },
-    ...holidays.map((holiday) => new Date(holiday.date)),
+    ...holidays
+      .filter((holiday) => holiday.type === "NATIONAL_HOLIDAY")
+      .map((holiday) => new Date(holiday.date)),
   ];
   return <Calendar disabled={disabled} {...props} />;
 };

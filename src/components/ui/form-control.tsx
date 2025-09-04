@@ -31,7 +31,7 @@ export const FormControl = ({ label, children, errorMessage }: Props) => {
           {children}
         </div>
         {errorMessage && typeof errorMessage === "string" ? (
-          <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2.5"}>
+          <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2"}>
             <WarningIcon />
             <p className={"whitespace-pre-line text-sm"}>{errorMessage}</p>
           </div>

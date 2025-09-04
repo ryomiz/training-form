@@ -1,13 +1,14 @@
 "use client";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useMemo, useState } from "react";
 import { ZodError } from "zod";
-import { WarningIcon } from "@/components/icon";
+import { InformationIcon, WarningIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormControlContext } from "@/components/ui/form-control";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
+import { useDate } from "@/lib/date/use-date";
 import { cn } from "@/lib/utils";
 import { useZodError } from "@/lib/zod/use-zod-error";
 import type { Holiday } from "@/schema";
@@ -63,6 +64,13 @@ export const ApplicationForm = ({ holidays }: Props) => {
       }
     }
   };
+
+  const { isSameDay } = useDate();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: isSameDay is a pure func
+  const observanceDay = useMemo(() => {
+    if (!date) return undefined;
+    return holidays.find((holiday) => isSameDay(new Date(holiday.date), date));
+  }, [holidays, date]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -166,7 +174,16 @@ export const ApplicationForm = ({ holidays }: Props) => {
               }}
               holidays={holidays}
             />
+            {observanceDay && (
+              <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2"}>
+                <InformationIcon />
+                <p className={"whitespace-pre-line text-sm"}>
+                  It is {observanceDay.name}.
+                </p>
+              </div>
+            )}
           </FormControl>
+
           <FormControl
             label={"Time"}
             errorMessage={
