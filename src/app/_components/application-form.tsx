@@ -27,8 +27,8 @@ export const ApplicationForm = () => {
   const [date, setDate] = useState<ApplicationFormInput["date"]>(undefined);
   const [timeSlot, setTimeSlot] =
     useState<ApplicationFormInput["timeSlot"]>("");
-  const _isSubmitButtonDisabled =
-    !firstName || !lastName || !email || !file || !timeSlot;
+  const isSubmitButtonDisabled =
+    !firstName || !lastName || !email || !file || !date || !timeSlot;
 
   const { setZodError, getErrorMessage } =
     useZodError<keyof ApplicationFormInput>();
@@ -153,7 +153,14 @@ export const ApplicationForm = () => {
               )
             }
           >
-            <Calendar mode={"single"} selected={date} onSelect={setDate} />
+            <Calendar
+              mode={"single"}
+              selected={date}
+              onSelect={(date) => {
+                setDate(date);
+                setTimeSlot(timeSlotOptions[0].value);
+              }}
+            />
           </FormControl>
           <FormControl
             label={"Time"}
@@ -172,23 +179,29 @@ export const ApplicationForm = () => {
               )
             }
           >
-            <RadioGroup
-              className="grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
-              value={timeSlot}
-              onValueChange={setTimeSlot}
-            >
-              {timeSlotOptions.map((option) => (
-                <TimeSlotRadioGroupItem
-                  key={option.value}
-                  option={option}
-                  isSelected={timeSlot === option.value}
-                />
-              ))}
-            </RadioGroup>
+            {date && (
+              <RadioGroup
+                className="grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
+                value={timeSlot}
+                onValueChange={setTimeSlot}
+              >
+                {timeSlotOptions.map((option) => (
+                  <TimeSlotRadioGroupItem
+                    key={option.value}
+                    option={option}
+                    isSelected={timeSlot === option.value}
+                  />
+                ))}
+              </RadioGroup>
+            )}
           </FormControl>
         </div>
       </div>
-      <Button type="submit" className={"mt-8 w-full"} disabled={false}>
+      <Button
+        type="submit"
+        className={"mt-8 w-full"}
+        disabled={isSubmitButtonDisabled}
+      >
         Send Application
       </Button>
     </form>
