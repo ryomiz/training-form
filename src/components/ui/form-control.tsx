@@ -14,7 +14,7 @@ export const FormControlContext = createContext<FormContextType | undefined>(
 type Props = {
   label: string | ReactElement;
   children: ReactNode;
-  errorMessage?: string;
+  errorMessage?: string | ReactElement;
 };
 export const FormControl = ({ label, children, errorMessage }: Props) => {
   const id = useId();
@@ -30,11 +30,13 @@ export const FormControl = ({ label, children, errorMessage }: Props) => {
           )}
           {children}
         </div>
-        {errorMessage && (
+        {errorMessage && typeof errorMessage === "string" ? (
           <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2.5"}>
             <WarningIcon />
             <p className={"whitespace-pre-line text-sm"}>{errorMessage}</p>
           </div>
+        ) : (
+          errorMessage
         )}
       </div>
     </FormControlContext.Provider>

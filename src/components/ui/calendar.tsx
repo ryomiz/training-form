@@ -5,7 +5,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
-import * as React from "react";
+import { useContext, useEffect, useRef } from "react";
 import {
   type DayButton,
   DayPicker,
@@ -13,6 +13,7 @@ import {
 } from "react-day-picker";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { FormControlContext } from "./form-control";
 
 function Calendar({
   className,
@@ -27,16 +28,19 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const defaultClassNames = getDefaultClassNames();
+  const context = useContext(FormControlContext);
 
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "group/calendar w-full rounded-md border border-purple-300 bg-background p-8 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "group/calendar w-full rounded-md bg-background p-8 shadow-[inset_0_0_0_1px_theme(colors.purple.300)] transition-[box-shadow] [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "data-[invalid=true]:bg-red-50 data-[invalid=true]:shadow-[inset_0_0_0_2px_theme(colors.red.500)]",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className,
       )}
+      data-invalid={context?.isInvalid}
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: (date) =>
@@ -180,8 +184,8 @@ function CalendarDayButton({
 }: React.ComponentProps<typeof DayButton>) {
   const defaultClassNames = getDefaultClassNames();
 
-  const ref = React.useRef<HTMLButtonElement>(null);
-  React.useEffect(() => {
+  const ref = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
 

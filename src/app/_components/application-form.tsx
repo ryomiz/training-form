@@ -1,9 +1,10 @@
 "use client";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { ZodError } from "zod";
+import { WarningIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { FormControl } from "@/components/ui/form-control";
+import { FormControl, FormControlContext } from "@/components/ui/form-control";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -23,9 +24,10 @@ export const ApplicationForm = () => {
   const [email, setEmail] = useState<ApplicationFormInput["email"]>("");
   const [age, setAge] = useState<ApplicationFormInput["age"]>([MIN_AGE]);
   const [file, setFile] = useState<ApplicationFormInput["file"]>(null);
+  const [date, setDate] = useState<ApplicationFormInput["date"]>(undefined);
   const [timeSlot, setTimeSlot] =
     useState<ApplicationFormInput["timeSlot"]>("");
-  const isSubmitButtonDisabled =
+  const _isSubmitButtonDisabled =
     !firstName || !lastName || !email || !file || !timeSlot;
 
   const { setZodError, getErrorMessage } =
@@ -35,14 +37,16 @@ export const ApplicationForm = () => {
     e.preventDefault();
     setZodError(null);
     try {
-      const parsed: ApplicationFormInput = applicationFormSchema.parse({
+      const data: ApplicationFormInput = {
         firstName,
         lastName,
         email,
         age,
         file,
+        date,
         timeSlot,
-      });
+      };
+      const parsed = applicationFormSchema.parse(data);
       await submitApplicationAction(parsed);
     } catch (e) {
       if (e instanceof ZodError) {
@@ -59,7 +63,7 @@ export const ApplicationForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="font-medium text-2xl">Personal info</h1>
-      <div className="mt-8 grid gap-y-6 sm:gap-y-0">
+      <div className="mt-8 grid gap-y-6">
         <FormControl
           label="First Name"
           errorMessage={getErrorMessage("firstName")}
@@ -118,22 +122,73 @@ export const ApplicationForm = () => {
       <div>
         <h2 className="mt-12 font-medium text-2xl">Your workout</h2>
         <div className="mt-8 grid gap-y-6 sm:grid-cols-[auto_76px] sm:items-start sm:gap-x-6">
-          <FormControl label={"Date"}>
-            <Calendar mode="single" />
+          <FormControl
+            label={"Date"}
+            errorMessage={
+              (getErrorMessage("date") || getErrorMessage("timeSlot")) && (
+                <>
+                  {getErrorMessage("date") && (
+                    <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2.5"}>
+                      <WarningIcon />
+                      <div>
+                        <p className={"whitespace-pre-line text-sm"}>
+                          {getErrorMessage("date")}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {getErrorMessage("timeSlot") && (
+                    <div
+                      className={
+                        "mt-2 grid hidden grid-cols-[auto_1fr] gap-x-2.5 sm:grid"
+                      }
+                    >
+                      <WarningIcon />
+                      <p className={"whitespace-pre-line text-sm"}>
+                        {getErrorMessage("timeSlot")}
+                      </p>
+                    </div>
+                  )}
+                </>
+              )
+            }
+          >
+            <Calendar mode={"single"} selected={date} onSelect={setDate} />
           </FormControl>
-          <FormControl label={"Time"}>
-            <TimeSlotRadioGroup
-              selectedTimeSlot={timeSlot}
-              onChange={setTimeSlot}
-            />
+          <FormControl
+            label={"Time"}
+            errorMessage={
+              getErrorMessage("timeSlot") && (
+                <div
+                  className={
+                    "mt-2 grid grid-cols-[auto_1fr] gap-x-2.5 sm:hidden"
+                  }
+                >
+                  <WarningIcon />
+                  <p className={"whitespace-pre-line text-sm"}>
+                    {getErrorMessage("timeSlot")}
+                  </p>
+                </div>
+              )
+            }
+          >
+            <RadioGroup
+              className="grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
+              value={timeSlot}
+              onValueChange={setTimeSlot}
+            >
+              {timeSlotOptions.map((option) => (
+                <TimeSlotRadioGroupItem
+                  key={option.value}
+                  option={option}
+                  isSelected={timeSlot === option.value}
+                />
+              ))}
+            </RadioGroup>
           </FormControl>
         </div>
       </div>
-      <Button
-        type="submit"
-        className={"mt-8 w-full"}
-        disabled={isSubmitButtonDisabled}
-      >
+      <Button type="submit" className={"mt-8 w-full"} disabled={false}>
         Send Application
       </Button>
     </form>
@@ -147,36 +202,32 @@ const timeSlotOptions = [
   { value: "1830", label: "18:30" },
   { value: "2000", label: "20:00" },
 ] as const;
-const TimeSlotRadioGroup = ({
-  selectedTimeSlot,
-  onChange,
+const TimeSlotRadioGroupItem = ({
+  option,
+  isSelected,
 }: {
-  selectedTimeSlot: string;
-  onChange: (value: string) => void;
-}) => (
-  <RadioGroup
-    className="grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
-    onValueChange={(value) => onChange(value)}
-  >
-    {timeSlotOptions.map((option) => (
-      <Fragment key={option.value}>
-        <RadioGroupItem
-          id={option.value}
-          value={option.value}
-          className={"sr-only"}
-        />
-        <label
-          htmlFor={option.value}
-          className={cn(
-            "grid h-[46px] cursor-pointer place-items-center rounded-md bg-white text-base transition-[box-shadow]",
-            "shadow-[inset_0_0_0_1px_theme(colors.purple.300)]",
-            selectedTimeSlot === option.value &&
-              "shadow-[inset_0_0_0_2px_theme(colors.purple.700)]",
-          )}
-        >
-          {option.label}
-        </label>
-      </Fragment>
-    ))}
-  </RadioGroup>
-);
+  option: (typeof timeSlotOptions)[number];
+  isSelected: boolean;
+}) => {
+  const context = useContext(FormControlContext);
+  return (
+    <Fragment>
+      <RadioGroupItem
+        id={option.value}
+        value={option.value}
+        className={"sr-only"}
+        aria-invalid={context?.isInvalid}
+      />
+      <label
+        htmlFor={option.value}
+        className={cn(
+          "grid h-[46px] cursor-pointer place-items-center rounded-md bg-white text-base transition-[box-shadow]",
+          "shadow-[inset_0_0_0_1px_theme(colors.purple.300)]",
+          isSelected && "shadow-[inset_0_0_0_2px_theme(colors.purple.700)]",
+        )}
+      >
+        {option.label}
+      </label>
+    </Fragment>
+  );
+};

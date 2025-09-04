@@ -10,6 +10,9 @@ export const applicationFormSchema = z.object({
   file: z.custom<File | null>().refine((val) => val instanceof File, {
     message: "Photo is Required",
   }),
+  date: z.custom<Date | undefined>().refine((val) => val instanceof Date, {
+    message: "Please Select Date",
+  }),
   timeSlot: z.string().nonempty("Please Select TimeSlot"),
 });
 export type ApplicationFormInput = z.infer<typeof applicationFormSchema>;
