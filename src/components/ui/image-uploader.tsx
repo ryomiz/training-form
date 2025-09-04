@@ -43,7 +43,8 @@ export const ImageUploader = ({
   return (
     <div
       className={cn(
-        "grid h-24 cursor-pointer place-items-center rounded-md bg-white shadow-[inset_0_0_0_1px_theme(colors.purple.300)] transition-[box-shadow]",
+        "grid h-24 cursor-pointer place-items-center rounded-md bg-white shadow-[inset_0_0_0_1px_theme(colors.purple.300)] outline-none transition-[box-shadow]",
+        "focus-within:shadow-[inset_0_0_0_2px_theme(colors.purple.700)]",
         "has-[input[aria-invalid=true]]:bg-red-50 has-[input[aria-invalid=true]]:shadow-[inset_0_0_0_2px_theme(colors.red.500)]",
       )}
       {...getRootProps()}
