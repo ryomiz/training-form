@@ -16,5 +16,5 @@ export const ApplicationFormCalendar = ({ holidays, ...props }: Props) => {
       .filter((holiday) => holiday.type === "NATIONAL_HOLIDAY")
       .map((holiday) => new Date(holiday.date)),
   ];
-  return <Calendar disabled={disabled} {...props} />;
+  return <Calendar disabled={disabled} showOutsideDays={false} {...props} />;
 };

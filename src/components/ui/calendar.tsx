@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 import {
   type DayButton,
@@ -60,12 +56,12 @@ function Calendar({
         ),
         button_previous: cn(
           buttonVariants({ variant: buttonVariant }),
-          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none rounded-full",
           defaultClassNames.button_previous,
         ),
         button_next: cn(
           buttonVariants({ variant: buttonVariant }),
-          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none rounded-full",
           defaultClassNames.button_next,
         ),
         month_caption: cn(
@@ -107,7 +103,7 @@ function Calendar({
           defaultClassNames.week_number,
         ),
         day: cn(
-          "relative w-full grid place-items-center p-0 text-center group/day aspect-square select-none",
+          "group relative w-full grid place-items-center p-0 text-center group/day aspect-square select-none",
           defaultClassNames.day,
         ),
         range_start: cn("bg-accent", defaultClassNames.range_start),
@@ -121,10 +117,7 @@ function Calendar({
           "text-muted-foreground aria-selected:text-muted-foreground",
           defaultClassNames.outside,
         ),
-        disabled: cn(
-          "text-muted-foreground opacity-50",
-          defaultClassNames.disabled,
-        ),
+        disabled: cn("text-slate-400 opacity-50", defaultClassNames.disabled),
         hidden: cn("invisible", defaultClassNames.hidden),
         ...classNames,
       }}
@@ -142,16 +135,37 @@ function Calendar({
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
-              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Previous Month</title>
+                <path
+                  d="M9.5 16.866C8.83333 16.4811 8.83333 15.5189 9.5 15.134L18.5 9.93782C19.1667 9.55292 20 10.034 20 10.8038L20 21.1962C20 21.966 19.1667 22.4471 18.5 22.0622L9.5 16.866Z"
+                  fill="#CBB6E5"
+                />
+              </svg>
             );
           }
 
           if (orientation === "right") {
             return (
-              <ChevronRightIcon
-                className={cn("size-4", className)}
-                {...props}
-              />
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Next Month</title>
+                <path
+                  d="M22.5 16.866C23.1667 16.4811 23.1667 15.5189 22.5 15.134L13.5 9.93782C12.8333 9.55292 12 10.034 12 10.8038L12 21.1962C12 21.966 12.8333 22.4471 13.5 22.0622L22.5 16.866Z"
+                  fill="#CBB6E5"
+                />
+              </svg>
             );
           }
 
@@ -196,6 +210,7 @@ function CalendarDayButton({
       variant="ghost"
       size="icon"
       data-day={day.date.toISOString().split("T")[0]}
+      data-today={modifiers.today}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&
@@ -206,7 +221,8 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "flex aspect-square size-8 min-w-(--cell-size) flex-col gap-1 rounded-full font-normal leading-none hover:bg-purple-50 data-[range-end=true]:rounded-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-start=true]:rounded-l-md data-[range-end=true]:bg-primary data-[range-middle=true]:bg-accent data-[range-start=true]:bg-primary data-[selected-single=true]:bg-purple-700 data-[range-end=true]:text-primary-foreground data-[range-middle=true]:text-accent-foreground data-[range-start=true]:text-primary-foreground data-[selected-single=true]:text-primary-foreground [&>span]:text-xs [&>span]:opacity-70",
+        "flex aspect-square size-8 min-w-(--cell-size) flex-col gap-1 rounded-full font-normal text-foreground leading-none hover:bg-purple-50 disabled:bg-transparent data-[selected-single=true]:bg-purple-700 data-[selected-single=true]:text-primary-foreground [&>span]:text-xs [&>span]:opacity-70",
+        !modifiers.selected && "data-[today=true]:bg-purple-50",
         defaultClassNames.day,
         className,
       )}

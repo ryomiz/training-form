@@ -10,8 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-purple-700 text-primary-foreground hover:bg-purple-800",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        ghost: "hover:bg-purple-50",
       },
       size: {
         default: "h-[45px]",

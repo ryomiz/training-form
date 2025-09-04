@@ -143,7 +143,7 @@ export const ApplicationForm = ({ holidays }: Props) => {
               (getErrorMessage("date") || getErrorMessage("timeSlot")) && (
                 <>
                   {getErrorMessage("date") && (
-                    <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2.5"}>
+                    <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2"}>
                       <WarningIcon />
                       <div>
                         <p className={"whitespace-pre-line text-sm"}>
@@ -155,7 +155,7 @@ export const ApplicationForm = ({ holidays }: Props) => {
                   {getErrorMessage("timeSlot") && (
                     <div
                       className={
-                        "mt-2 grid hidden grid-cols-[auto_1fr] gap-x-2.5 sm:grid"
+                        "mt-2 grid hidden grid-cols-[auto_1fr] gap-x-2 sm:grid"
                       }
                     >
                       <WarningIcon />
@@ -194,7 +194,7 @@ export const ApplicationForm = ({ holidays }: Props) => {
                 getErrorMessage("timeSlot") && (
                   <div
                     className={
-                      "mt-2 grid grid-cols-[auto_1fr] gap-x-2.5 sm:hidden"
+                      "mt-2 grid grid-cols-[auto_1fr] gap-x-2 sm:hidden"
                     }
                   >
                     <WarningIcon />
