@@ -1,5 +1,13 @@
 "use client";
-import { type FormEvent, Fragment, useContext, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  type FormEvent,
+  Fragment,
+  useContext,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import type { MonthChangeEventHandler } from "react-day-picker";
 import { ZodError } from "zod";
 import { InformationIcon, WarningIcon } from "@/components/icon";
@@ -58,21 +66,27 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
   const { setZodError, getErrorMessage } =
     useZodError<keyof ApplicationFormInput>();
 
+  const { push } = useRouter();
+  const [isPending, startTransition] = useTransition();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setZodError(null);
+    const data: ApplicationFormInput = {
+      firstName,
+      lastName,
+      email,
+      age,
+      file,
+      date,
+      timeSlot,
+    };
+
     try {
-      const data: ApplicationFormInput = {
-        firstName,
-        lastName,
-        email,
-        age,
-        file,
-        date,
-        timeSlot,
-      };
       const parsed = applicationFormSchema.parse(data);
-      await submitApplicationAction(parsed);
+      startTransition(async () => {
+        await submitApplicationAction(parsed);
+        await push("/complete");
+      });
     } catch (e) {
       if (e instanceof ZodError) {
         setZodError(e);
@@ -249,6 +263,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
         type="submit"
         className={"mt-8 w-full"}
         disabled={isSubmitButtonDisabled}
+        isLoading={isPending}
       >
         Send Application
       </Button>

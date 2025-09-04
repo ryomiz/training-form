@@ -13,7 +13,7 @@ export const submitApplicationAction = async (
     body: JSON.stringify(parsedFormInput),
   });
   if (res.status !== 200) {
-    throw new Error();
+    throw new Error("Failed to Submit");
   }
 
   return;
