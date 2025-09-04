@@ -60,9 +60,6 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
   const [date, setDate] = useState<ApplicationFormInput["date"]>(undefined);
   const [timeSlot, setTimeSlot] =
     useState<ApplicationFormInput["timeSlot"]>("");
-  const isSubmitButtonDisabled =
-    !firstName || !lastName || !email || !file || !date || !timeSlot;
-
   const { setZodError, getErrorMessage } =
     useZodError<keyof ApplicationFormInput>();
 
@@ -80,7 +77,6 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
       date,
       timeSlot,
     };
-
     try {
       const parsed = applicationFormSchema.parse(data);
       startTransition(async () => {
@@ -107,6 +103,9 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
     if (!date) return undefined;
     return holidays.find((holiday) => isSameDay(new Date(holiday.date), date));
   }, [holidays, date]);
+
+  const isSubmitButtonDisabled =
+    !firstName || !lastName || !email || !file || !date || !timeSlot;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -191,7 +190,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
                   {getErrorMessage("timeSlot") && (
                     <div
                       className={
-                        "mt-2 grid hidden grid-cols-[auto_1fr] gap-x-2 sm:grid"
+                        "mt-2 hidden grid-cols-[auto_1fr] gap-x-2 sm:grid"
                       }
                     >
                       <WarningIcon />
@@ -209,7 +208,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
               selected={date}
               onSelect={(date) => {
                 setDate(date);
-                setTimeSlot(timeSlotOptions[0].value);
+                setTimeSlot("");
               }}
               holidays={holidays}
               onMonthChange={onMonthChange}
@@ -224,7 +223,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
             )}
           </FormControl>
 
-          {date && (
+          {date && !observanceDay && (
             <FormControl
               label={<div>Time</div>}
               errorMessage={
@@ -261,7 +260,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
       </div>
       <Button
         type="submit"
-        className={"mt-8 w-full"}
+        className={cn("mt-8 w-full", date && "mt-12")}
         disabled={isSubmitButtonDisabled}
         isLoading={isPending}
       >
