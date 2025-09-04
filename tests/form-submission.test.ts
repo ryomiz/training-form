@@ -4,7 +4,7 @@ test.describe("Application Form Submission", () => {
   test("succeed submission and transition to complete page", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "networkidle" });
     await page.fill('input[name="firstName"]', "Ryosuke");
     await page.fill('input[name="lastName"]', "Mizuno");
     await page.fill('input[name="email"]', "ryo@example.com");
@@ -26,7 +26,7 @@ test.describe("Application Form Submission", () => {
   });
 
   test("failed submission due to invalid email", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "networkidle" });
     await page.fill('input[name="firstName"]', "Ryosuke");
     await page.fill('input[name="lastName"]', "Mizuno");
     await page.fill('input[name="email"]', "invalid email");
@@ -41,12 +41,32 @@ test.describe("Application Form Submission", () => {
     await page.click('label[for="1200"]');
 
     await page.click('button[type="submit"]');
-
     const errorMessage = page
       .locator('input[name="email"]')
       .locator("..")
       .locator("..")
       .locator("p");
     await expect(errorMessage).toBeVisible();
+  });
+
+  test("display notice when an observance holiday si selected", async ({
+    page,
+  }) => {
+    // It works only in September
+    await page.goto("/", { waitUntil: "networkidle" });
+    const nextMonthButton = await page.locator(
+      'button[aria-label="Go to the Next Month"]',
+    );
+    await nextMonthButton.click();
+    await nextMonthButton.click();
+    await nextMonthButton.click();
+    await page.click('button[data-day="2025-12-24"]');
+
+    const notice = page
+      .locator('[data-slot="calendar"]')
+      .locator("..")
+      .locator("div")
+      .nth(2);
+    await expect(notice).toBeVisible();
   });
 });

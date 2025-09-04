@@ -198,18 +198,22 @@ function CalendarDayButton({
   ...props
 }: React.ComponentProps<typeof DayButton>) {
   const defaultClassNames = getDefaultClassNames();
-
   const ref = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
+
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const y = day.date.getFullYear();
+  const m = pad(day.date.getMonth() + 1);
+  const d = pad(day.date.getDate());
 
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toISOString().split("T")[0]}
+      data-day={`${y}-${m}-${d}`}
       data-today={modifiers.today}
       data-selected-single={
         modifiers.selected &&
