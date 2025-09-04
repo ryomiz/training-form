@@ -1,5 +1,6 @@
 "use client";
 import { Fragment, useContext, useMemo, useState } from "react";
+import type { MonthChangeEventHandler } from "react-day-picker";
 import { ZodError } from "zod";
 import { InformationIcon, WarningIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { useDate } from "@/lib/date/use-date";
 import { cn } from "@/lib/utils";
 import { useZodError } from "@/lib/zod/use-zod-error";
-import type { Holiday } from "@/schema";
+import { type Holiday, holidaySchema } from "@/schema";
 import { submitApplicationAction } from "./actions";
 import { ApplicationFormCalendar } from "./application-form-calendar";
 import { type ApplicationFormInput, applicationFormSchema } from "./schema";
@@ -19,9 +20,28 @@ import { type ApplicationFormInput, applicationFormSchema } from "./schema";
 const MIN_AGE = 8;
 
 type Props = {
-  holidays: Holiday[];
+  initialHolidays: Holiday[];
 };
-export const ApplicationForm = ({ holidays }: Props) => {
+export const ApplicationForm = ({ initialHolidays }: Props) => {
+  const [holidays, setHolidays] = useState<Holiday[]>(initialHolidays);
+  // It works with valid API Key
+  const onMonthChange: MonthChangeEventHandler = async (month) => {
+    const selectedMonth = new Date(month).getMonth();
+    if (selectedMonth !== 0 && selectedMonth !== 11) return;
+
+    const year = new Date(month).getFullYear();
+    const hasAlreadyFetched = holidays.some((holiday) => holiday.year === year);
+    if (hasAlreadyFetched) return;
+
+    const res = await fetch(`/api?year=${year}`);
+    if (res.status !== 200) {
+      throw new Error("Failed to fetch holidays");
+    }
+    const data = await res.json();
+    const newHolidays = holidaySchema.array().parse(data);
+    setHolidays([...holidays, ...newHolidays]);
+  };
+
   const [firstName, setFirstName] =
     useState<ApplicationFormInput["firstName"]>("");
   const [lastName, setLastName] =
@@ -176,6 +196,7 @@ export const ApplicationForm = ({ holidays }: Props) => {
                 setTimeSlot(timeSlotOptions[0].value);
               }}
               holidays={holidays}
+              onMonthChange={onMonthChange}
             />
             {observanceDay && (
               <div className={"mt-2 grid grid-cols-[auto_1fr] gap-x-2"}>

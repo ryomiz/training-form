@@ -10,14 +10,16 @@ export default async function Home() {
       "X-Api-Key": serverEnv.API_KEY,
     },
   });
-  if (!res.ok) throw Error;
+  if (!res.ok) {
+    throw new Error("Failed to fetch holidays");
+  }
 
   const data = await res.json();
-  const holidays = holidaySchema.array().parse(data);
+  const initialHolidays = holidaySchema.array().parse(data);
 
   return (
     <div>
-      <ApplicationForm holidays={holidays} />
+      <ApplicationForm initialHolidays={initialHolidays} />
     </div>
   );
 }
