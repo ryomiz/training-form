@@ -112,7 +112,10 @@ export const ApplicationForm = ({ holidays }: Props) => {
           />
         </FormControl>
 
-        <FormControl label="Age" errorMessage={getErrorMessage("age")}>
+        <FormControl
+          label={<div>Age</div>}
+          errorMessage={getErrorMessage("age")}
+        >
           <Slider
             value={age}
             min={MIN_AGE}
@@ -135,7 +138,7 @@ export const ApplicationForm = ({ holidays }: Props) => {
         <h2 className="mt-12 font-medium text-2xl">Your workout</h2>
         <div className="mt-8 grid gap-y-6 sm:grid-cols-[auto_76px] sm:items-start sm:gap-x-6">
           <FormControl
-            label={"Date"}
+            label={<div>Date</div>}
             errorMessage={
               (getErrorMessage("date") || getErrorMessage("timeSlot")) && (
                 <>
@@ -184,24 +187,24 @@ export const ApplicationForm = ({ holidays }: Props) => {
             )}
           </FormControl>
 
-          <FormControl
-            label={"Time"}
-            errorMessage={
-              getErrorMessage("timeSlot") && (
-                <div
-                  className={
-                    "mt-2 grid grid-cols-[auto_1fr] gap-x-2.5 sm:hidden"
-                  }
-                >
-                  <WarningIcon />
-                  <p className={"whitespace-pre-line text-sm"}>
-                    {getErrorMessage("timeSlot")}
-                  </p>
-                </div>
-              )
-            }
-          >
-            {date && (
+          {date && (
+            <FormControl
+              label={"Time"}
+              errorMessage={
+                getErrorMessage("timeSlot") && (
+                  <div
+                    className={
+                      "mt-2 grid grid-cols-[auto_1fr] gap-x-2.5 sm:hidden"
+                    }
+                  >
+                    <WarningIcon />
+                    <p className={"whitespace-pre-line text-sm"}>
+                      {getErrorMessage("timeSlot")}
+                    </p>
+                  </div>
+                )
+              }
+            >
               <RadioGroup
                 className="grid grid-cols-4 gap-2 sm:mt-0 sm:grid-cols-1"
                 value={timeSlot}
@@ -215,8 +218,8 @@ export const ApplicationForm = ({ holidays }: Props) => {
                   />
                 ))}
               </RadioGroup>
-            )}
-          </FormControl>
+            </FormControl>
+          )}
         </div>
       </div>
       <Button
