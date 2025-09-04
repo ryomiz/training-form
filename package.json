@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
-    "check": "npx @biomejs/biome check --write --unsafe ./src"
+    "check": "npx @biomejs/biome check --write --unsafe ./src",
+    "test": "npx playwright test"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
