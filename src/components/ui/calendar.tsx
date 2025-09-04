@@ -171,6 +171,7 @@ function Calendar({
         },
         ...components,
       }}
+      disabled={[{ dayOfWeek: [0, 7] }]}
       {...props}
     />
   );

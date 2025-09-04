@@ -3,7 +3,6 @@ import { Fragment, useContext, useState } from "react";
 import { ZodError } from "zod";
 import { WarningIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { FormControl, FormControlContext } from "@/components/ui/form-control";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { Input } from "@/components/ui/input";
@@ -11,12 +10,17 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useZodError } from "@/lib/zod/use-zod-error";
+import type { Holiday } from "@/schema";
 import { submitApplicationAction } from "./actions";
+import { ApplicationFormCalendar } from "./application-form-calendar";
 import { type ApplicationFormInput, applicationFormSchema } from "./schema";
 
 const MIN_AGE = 8;
 
-export const ApplicationForm = () => {
+type Props = {
+  holidays: Holiday[];
+};
+export const ApplicationForm = ({ holidays }: Props) => {
   const [firstName, setFirstName] =
     useState<ApplicationFormInput["firstName"]>("");
   const [lastName, setLastName] =
@@ -153,13 +157,14 @@ export const ApplicationForm = () => {
               )
             }
           >
-            <Calendar
+            <ApplicationFormCalendar
               mode={"single"}
               selected={date}
               onSelect={(date) => {
                 setDate(date);
                 setTimeSlot(timeSlotOptions[0].value);
               }}
+              holidays={holidays}
             />
           </FormControl>
           <FormControl
