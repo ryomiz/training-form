@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useContext, useMemo, useState } from "react";
+import { type FormEvent, Fragment, useContext, useMemo, useState } from "react";
 import type { MonthChangeEventHandler } from "react-day-picker";
 import { ZodError } from "zod";
 import { InformationIcon, WarningIcon } from "@/components/icon";
@@ -58,7 +58,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
   const { setZodError, getErrorMessage } =
     useZodError<keyof ApplicationFormInput>();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setZodError(null);
     try {
@@ -81,6 +81,8 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
           left: 0,
           behavior: "smooth",
         });
+      } else {
+        throw e;
       }
     }
   };
@@ -210,7 +212,7 @@ export const ApplicationForm = ({ initialHolidays }: Props) => {
 
           {date && (
             <FormControl
-              label={"Time"}
+              label={<div>Time</div>}
               errorMessage={
                 getErrorMessage("timeSlot") && (
                   <div
