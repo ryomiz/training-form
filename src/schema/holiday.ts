@@ -7,6 +7,12 @@ export const holidaySchema = z.object({
   date: z.string(),
   day: z.string(),
   name: z.string(),
-  type: z.string(),
+  type: z.union([
+    z.literal("NATIONAL_HOLIDAY"),
+    z.literal("OBSERVANCE"),
+    z.string(),
+  ]),
 });
-export type Holiday = z.infer<typeof holidaySchema>;
+export type Holiday = Omit<z.infer<typeof holidaySchema>, "type"> & {
+  type: "NATIONAL_HOLIDAY" | "OBSERVANCE" | (string & {});
+};
