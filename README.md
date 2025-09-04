@@ -5,12 +5,18 @@
 - Next.js
 - Tailwind CSS, shadcn/ui
 - Vercel
+- Playwright
 
 ## Getting Started
 ```bash
 npm run dev
 ```
 Open http://localhost:3000 in your browser
+
+## Test
+```bash
+npm run test
+```
 
 ## Features
 - All Fields are required. Submit button is disabled if there's any blank field.
